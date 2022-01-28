@@ -20,8 +20,13 @@ class User:
         query ="INSERT INTO users (first_name, last_name, email, password, created_at, updated_at) VALUES ( %(first_name)s, %(last_name)s, %(email)s, %(password)s, Now(), Now()); "
         return MySQLConnection(cls.db).query_db(query,data)
         
-    
-    
+    @classmethod
+    def get_with_email(cls,data):
+        query=" SELECT * FROM users where email = %(email)s"
+        result = MySQLConnection(cls.db).query_db(query,data)
+        user = cls(result[0])
+        return user
+
     @staticmethod
     def validate_reg(user):
         is_valid = True
@@ -52,6 +57,3 @@ class User:
             flash("password needs to be at least 8 characters long", "reg")
             is_valid = False
         return is_valid
-    @staticmethod
-    def validate_login(login):
-        is_valid = True
